@@ -2,11 +2,18 @@ const express = require('express')
 const app =  express()
 const dotenv = require('dotenv')
 const connectDataBase = require('./controller/dbconnect')
+const productRoutes = require('./routes/producRoutes')
+const bodyParser = require('body-parser')
+
 // config dotenv
 dotenv.config();
 // connecting DB 
 connectDataBase();
+//body parser
+app.use(express.json())
 
+// product routes
+app.use(productRoutes)
 
 app.listen(process.env.PORT,()=>{
     console.log("server listing at port 8080")
