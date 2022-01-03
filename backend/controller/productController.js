@@ -1,10 +1,13 @@
 const Product = require('../models/product');
 const ErrorHandler = require('../utils/errorHandler');
 const asyncErrorHandler = require('../middleware/asyncErrorHandler')
+const SearchAndFilter = require('../utils/filter')
 
 // get all products in DB
 const getProduct = asyncErrorHandler(async (req,res)=>{
-    const products = await Product.find();
+    const productPerPage = 5;
+    const searchAndFilter = new SearchAndFilter(Product.find(),req.query).Search().filter().pagination(productPerPage)
+    const products = await searchAndFilter.query;
     res.status(200).json({
         success:true,
         products
