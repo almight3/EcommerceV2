@@ -12,10 +12,18 @@ const authenticatUser = asyncErrorHandler(async(req,res,next)=>{
   // if token then verify token 
   const verfiyToken = jwt.verify(token,process.env.SECRET_KEY)
   // geting user from id which is decode from jwt token 
-  res.user = await User.findById(verfiyToken.id)
+  req.user = await User.findById(verfiyToken.id)
   next()
 
 })
 
+const authorizeUser = (...roles)=>{
+  return (req,res,next)=>{
+    if(!roles.includes(req.user.role)){
+        return next(new ErrorHandler("This user dont have this permision"))
+    }
+    next();
+  }
+}
 
-module.exports = authenticatUser;
+module.exports = {authenticatUser,authorizeUser};
